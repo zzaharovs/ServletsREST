@@ -2,11 +2,8 @@ package ru.netology.servlet;
 
 import com.google.gson.Gson;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.netology.config.JavaConfiguration;
 import ru.netology.controller.PostController;
 import ru.netology.exception.NotFoundException;
-import ru.netology.repository.PostRepository;
-import ru.netology.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +29,7 @@ public class MainServlet extends HttpServlet {
     @Override
     public void init() {
 
-        final var context = new AnnotationConfigApplicationContext(JavaConfiguration.class);
+        final var context = new AnnotationConfigApplicationContext("ru.netology");
 
         handlers = new ConcurrentHashMap<>();
         controller = context.getBean(PostController.class);
