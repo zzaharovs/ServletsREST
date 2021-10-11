@@ -22,7 +22,7 @@ public class PostRepository {
     }
 
     public List<Post> all() {
-        if (postMap.isEmpty()) throw new NullPointerException("Список постов пуст");
+        if (postMap.isEmpty()) throw new NotFoundException("Список постов пуст");
         return new ArrayList<>(postMap.values());
     }
 

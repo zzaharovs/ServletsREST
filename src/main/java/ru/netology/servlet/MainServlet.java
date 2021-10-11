@@ -61,7 +61,7 @@ public class MainServlet extends HttpServlet {
             final var path = req.getRequestURI().matches((API_PATH + "/\\d")) ? API_PATH : req.getRequestURI();
             final var id = req.getRequestURI().matches((API_PATH + "/\\d")) ?
                     Long.parseLong(req.getRequestURI()
-                            .substring(req.getRequestURI().lastIndexOf("/")+1)) : defaultValueForId;
+                            .substring(req.getRequestURI().lastIndexOf("/") + 1)) : defaultValueForId;
 
             Handler currentHandler = searchHandler(method, path);
 
@@ -70,7 +70,15 @@ public class MainServlet extends HttpServlet {
                 throw new NotFoundException("Неверно указан путь запроса");
             }
             currentHandler.Handle(req, resp, id);
-
+        } catch (NotFoundException exception) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.setContentType(APPLICATION_JSON);
+            final var gson = new Gson();
+            try {
+                resp.getWriter().print(gson.toJson(exception.getMessage()));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
