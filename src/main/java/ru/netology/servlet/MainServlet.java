@@ -1,10 +1,9 @@
 package ru.netology.servlet;
 
 import com.google.gson.Gson;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.netology.controller.PostController;
 import ru.netology.exception.NotFoundException;
-import ru.netology.repository.PostRepository;
-import ru.netology.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,7 @@ import static ru.netology.controller.PostController.APPLICATION_JSON;
 
 
 public class MainServlet extends HttpServlet {
+
     private PostController controller;
     private ConcurrentMap<String, ConcurrentMap<String, Handler>> handlers;
     public static final String HTTP_METHOD_GET = "GET";
@@ -26,13 +26,13 @@ public class MainServlet extends HttpServlet {
     public static final String API_PATH = "/api/posts";
     private final Long defaultValueForId = 999L;
 
-
     @Override
     public void init() {
-        final var repository = new PostRepository();
-        final var service = new PostService(repository);
+
+        final var context = new AnnotationConfigApplicationContext("ru.netology");
+
         handlers = new ConcurrentHashMap<>();
-        controller = new PostController(service);
+        controller = context.getBean(PostController.class);
 
         addHandler(HTTP_METHOD_GET, API_PATH, (req, resp, id) -> {
             if (defaultValueForId.equals(id)) {
